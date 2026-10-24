@@ -7,12 +7,10 @@
  * The matching engine below (gate + EDPS) is the reference implementation;
  * the Lambda version should mirror it exactly.
  */
-(function () {
-  'use strict';
+import { API_BASE } from './config.js';
 
-  const CFG = window.BLOODBRIDGE_CONFIG || {};
-  const BASE = (CFG.API_BASE || '').replace(/\/$/, '');
-  const MODE = BASE ? 'aws' : 'demo';
+const BASE = API_BASE.replace(/\/$/, '');
+const MODE = BASE ? 'aws' : 'demo';
 
   const DAY = 864e5;
   const BATCH_SIZE = 5;
@@ -138,11 +136,11 @@
   let mem = null;
   function load() {
     if (mem) return mem;
-    try { const s = localStorage.getItem(KEY); if (s) mem = JSON.parse(s); } catch (e) { /* storage blocked */ }
+    try { const s = localStorage.getItem(KEY); if (s) mem = JSON.parse(s); } catch { /* storage blocked */ }
     if (!mem) mem = { donors: [], requests: [], notifs: [], seq: { d: 0, r: 0 } };
     return mem;
   }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { /* ignore */ } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch { /* ignore */ } }
   const clone = x => JSON.parse(JSON.stringify(x));
   const pad = (n, w) => String(n).padStart(w, '0');
   const today = () => new Date().toISOString().slice(0, 10);
@@ -347,8 +345,8 @@
     let res;
     try {
       res = await fetch(BASE + path, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined });
-    } catch (e) { throw new Error('Could not reach the API. Check API_BASE in config.js and CORS on API Gateway.'); }
-    let data = null; try { data = await res.json(); } catch (e) { /* empty body */ }
+    } catch { throw new Error('Could not reach the API. Check VITE_API_BASE and API Gateway CORS.'); }
+    let data = null; try { data = await res.json(); } catch { /* empty body */ }
     if (!res.ok) throw new Error((data && (data.error || data.message)) || `Request failed (${res.status})`);
     return data;
   }
@@ -366,9 +364,21 @@
     reset: async () => ({})
   };
 
-  window.BB = {
-    MODE, GROUPS, URGENCY, W, LOCALITIES, HOSPITALS, BATCH_SIZE, RADIUS_STEP, RADIUS_MAX, MIN_INTERVAL_DAYS, MAX_NOTIFS_24H,
-    api: MODE === 'aws' ? aws : demo,
-    _engine: { rank, haversine, COMPAT } // exposed for testing
-  };
-})();
+const api = MODE === 'aws' ? aws : demo;
+const _engine = { rank, haversine, COMPAT };
+
+export {
+  api,
+  MODE,
+  GROUPS,
+  URGENCY,
+  W,
+  LOCALITIES,
+  HOSPITALS,
+  BATCH_SIZE,
+  RADIUS_STEP,
+  RADIUS_MAX,
+  MIN_INTERVAL_DAYS,
+  MAX_NOTIFS_24H,
+  _engine,
+};
