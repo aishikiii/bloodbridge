@@ -1,32 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BloodBridge</title>
-  <meta name="description" content="Cloud-native blood donor matching and emergency response on AWS">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="BloodBridge helps verified care teams find and coordinate eligible blood donors quickly.">
+  <meta name="theme-color" content="#a61936">
+  <script>
+    (() => {
+      const saved = localStorage.getItem('bb-theme') || 'system';
+      const dark = saved === 'dark' || (saved === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    })();
+  </script>
 </head>
 <body>
-  <header class="top">
-    <a class="brand" href="#/">Blood<span>Bridge</span></a>
-    <nav id="nav" aria-label="Main"></nav>
-    <span id="mode" class="mode"></span>
-  </header>
-
-  <main id="app" aria-live="polite"></main>
-
-  <footer class="foot">
-    <p><strong>Safety boundary.</strong> The score prioritizes outreach. It never replaces blood-centre screening or transfusion decisions. Prototype with synthetic data only.</p>
-  </footer>
-
-  <div id="toast" class="toast" role="status"></div>
-
-  <script src="config.js"></script>
-  <script src="api.js"></script>
-  <script src="app.js"></script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
