@@ -12,9 +12,9 @@
         "dynamodb:BatchWriteItem"
       ],
       "Resource": [
-        "arn:aws:dynamodb:ap-south-1:YOUR_ACCOUNT_ID:table/BB_Donors",
-        "arn:aws:dynamodb:ap-south-1:YOUR_ACCOUNT_ID:table/BB_Requests",
-        "arn:aws:dynamodb:ap-south-1:YOUR_ACCOUNT_ID:table/BB_Notifications"
+        "arn:aws:dynamodb:ap-southeast-2:YOUR_ACCOUNT_ID:table/BB_Donors",
+        "arn:aws:dynamodb:ap-southeast-2:YOUR_ACCOUNT_ID:table/BB_Requests",
+        "arn:aws:dynamodb:ap-southeast-2:YOUR_ACCOUNT_ID:table/BB_Notifications"
       ]
     }
   ]
